@@ -93,6 +93,8 @@ public class Test {
 
 其实理解这一思想很重要，不然就像我以前一样，都不知道bean是干什么用的，甚至觉得有点鸡肋和多余。
 
+控制反转是一种思想，由主动编程变为被动接收。它可以放我们实现解耦，不需要修改程序，只需要修改配置文件即可。
+
   [1]: https://docs.spring.io/spring/docs/4.3.22.RELEASE/spring-framework-reference/htmlsingle/images/spring-overview.png
   [2]: http://static.zybuluo.com/gzm1997/h8bth4ekxvnh1znn9ey0easp/image.png
   [3]: http://static.zybuluo.com/gzm1997/a1r472cs34jmwoz37ru1f81c/image.png
