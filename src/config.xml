@@ -6,8 +6,14 @@
     <bean id="mysql" class="cn.gzm.app.dao.impl.UserGetByMysql"/>
     <bean id="oracle" class="cn.gzm.app.dao.impl.UserGetByOracle"/>
 
-    <bean id="dynamicFactory" class="cn.gzm.app.service.factory.ServiceDynamicFactory"/>
-    <bean id="service" factory-bean="dynamicFactory" factory-method="newInstance">
-        <constructor-arg name="userDao" ref="mysql"></constructor-arg>
+    <bean id="service" class="cn.gzm.app.service.impl.UserDataServiceImpl">
+        <property name="userDao" ref="mysql"/>
     </bean>
+    <!--<bean id="service1" class="cn.gzm.app.service.impl.UserDataServiceImpl">-->
+        <!--<constructor-arg name="userDao" ref="mysql"></constructor-arg>-->
+    <!--</bean>-->
+    <!--<bean id="dynamicFactory" class="cn.gzm.app.service.factory.ServiceDynamicFactory"/>-->
+    <!--<bean id="service2" factory-bean="dynamicFactory" factory-method="newInstance">-->
+        <!--<constructor-arg name="userDao" ref="mysql"></constructor-arg>-->
+    <!--</bean>-->
 </beans>

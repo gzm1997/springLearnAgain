@@ -101,20 +101,47 @@ public class Test {
 
 １．使用无参构造函数来创建
 class的无参构造函数
-![image.png-32.2kB][4]
+```java
+    public UserDataServiceImpl() {
+        System.out.println("这是UserDataServiceImpl无参构造函数");
+    }
+```
 配置文件
-![image.png-16.9kB][5]
+```
+    <bean id="mysql" class="cn.gzm.app.dao.impl.UserGetByMysql"/>
+    <bean id="oracle" class="cn.gzm.app.dao.impl.UserGetByOracle"/>
+
+    <bean id="service" class="cn.gzm.app.service.impl.UserDataServiceImpl">
+        <property name="userDao" ref="mysql"/>
+    </bean>
+```
 运行效果
+
 ![image.png-14.3kB][6]
+
 很有意思的是，class的字段值的设置是通过set函数来设置的，即使在没有set函数但是有有参构造函数的情况下也是不可以的，运行会报错。
 
 ２．使用有参构造函数来创建
 class的有参构造函数
-![image.png-24.7kB][7]
+```java
+    public UserDataServiceImpl(UserDao userDao) {
+        System.out.println("这是UserDataServiceImpl有参构造函数");
+        this.userDao = userDao;
+    }
+```
 配置文件
-![image.png-24.7kB][8]
+```
+    <bean id="mysql" class="cn.gzm.app.dao.impl.UserGetByMysql"/>
+    <bean id="oracle" class="cn.gzm.app.dao.impl.UserGetByOracle"/>
+
+    <bean id="service" class="cn.gzm.app.service.impl.UserDataServiceImpl">
+        <constructor-arg name="userDao" ref="mysql"></constructor-arg>
+    </bean>
+```
 运行效果
+
 ![image.png-14.5kB][9]
+
 这里在配置文件中使用**constructor-arg**来对对象中字段进行赋值，除了有name-value还有index-value等多种方式
 
 ３．使用静态工厂方法来创建，有时候需要一个class只创建一个对象，这时候需要使用静态工厂来创建这个唯一的对象
