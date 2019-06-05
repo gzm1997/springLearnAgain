@@ -85,16 +85,113 @@ public class Test {
 
 
 ----------
-## 控制反转 ##
+## 控制翻转 ##
 以前我们没有使用框架的时候，一般都是在程序本身之间创建和管理对象的，这样dao和服务层就耦合在一起了，现在spring允许我们的程序不创建对象，只是接受对象，实现解耦，让我们程序员可以将主要经历放在业务层中。
 
 所谓控制就是对对象创建的控制，由以前的程序直接创建变为spring容器创建
-所谓反转就是程序本身的主动创建，变为被动地接受对象。
+所谓翻转就是程序本身的主动创建，变为被动地接受对象。
 
 其实理解这一思想很重要，不然就像我以前一样，都不知道bean是干什么用的，甚至觉得有点鸡肋和多余。
 
 控制反转是一种思想，由主动编程变为被动接收。它可以放我们实现解耦，不需要修改程序，只需要修改配置文件即可。
 
+
+----------
+## spring配置文件编写 ##
+
+１．使用无参构造函数来创建
+class的无参构造函数
+![image.png-32.2kB][4]
+配置文件
+![image.png-16.9kB][5]
+运行效果
+![image.png-14.3kB][6]
+很有意思的是，class的字段值的设置是通过set函数来设置的，即使在没有set函数但是有有参构造函数的情况下也是不可以的，运行会报错。
+
+２．使用有参构造函数来创建
+class的有参构造函数
+![image.png-24.7kB][7]
+配置文件
+![image.png-24.7kB][8]
+运行效果
+![image.png-14.5kB][9]
+这里在配置文件中使用**constructor-arg**来对对象中字段进行赋值，除了有name-value还有index-value等多种方式
+
+３．使用静态工厂方法来创建，有时候需要一个class只创建一个对象，这时候需要使用静态工厂来创建这个唯一的对象
+静态工厂class
+```java
+public class ServiceFactory {
+    public static UserDataServiceImpl newInstance(UserDao userDao) {
+        System.out.println("使用静态方法工厂创建对象");
+        return new UserDataServiceImpl(userDao);
+    }
+}
+```
+配置文件
+```
+    <bean id="service" class="cn.gzm.app.service.factory.ServiceFactory" factory-method="newInstance">
+        <constructor-arg name="userDao" ref="mysql"></constructor-arg>
+    </bean>
+```
+
+４．使用动态工厂方法创建对象
+动态工厂class
+```java
+public class ServiceDynamicFactory {
+    public UserDataServiceImpl newInstance(UserDao userDao) {
+        System.out.println("使用动态工厂方法创建对象");
+        return new UserDataServiceImpl(userDao);
+    }
+}
+```
+配置文件
+```java
+    <bean id="dynamicFactory" class="cn.gzm.app.service.factory.ServiceDynamicFactory"/>
+    <bean id="service" factory-bean="dynamicFactory" factory-method="newInstance">
+        <constructor-arg name="userDao" ref="mysql"></constructor-arg>
+    </bean>
+```
+运行
+![image.png-22kB][10]
+
+bean可以设置多个别名，但是这个其实不是很重要，我们在测试函数中getBean获取这个对象的时候可以根据id也可以根据name。那么如果我们在配置文件中既没有给对象设置id，也没有设置name，是可以通过对象的class来获取的。像下面这样：
+
+    UserDataService userDataService = (UserDataService) context.getBean(UserDataServiceImpl.class);
+
+但是当配置文件中有多个符合要求的对象被返回，那么就会报错。
+
+５．团队写作，多个配置文件
+需要import的配置文件config.xml
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--无论你用不用　下面两个bean都会被创建　其实所有的bean都会被创建-->
+    <bean id="mysql" class="cn.gzm.app.dao.impl.UserGetByMysql"/>
+    <bean id="oracle" class="cn.gzm.app.dao.impl.UserGetByOracle"/>
+
+    <bean id="dynamicFactory" class="cn.gzm.app.service.factory.ServiceDynamicFactory"/>
+    <bean id="service" factory-bean="dynamicFactory" factory-method="newInstance">
+        <constructor-arg name="userDao" ref="mysql"></constructor-arg>
+    </bean>
+</beans>
+```
+在主配置文件中import
+
+    <import resource="config.xml"/>
+
+
+
+
+
   [1]: https://docs.spring.io/spring/docs/4.3.22.RELEASE/spring-framework-reference/htmlsingle/images/spring-overview.png
   [2]: http://static.zybuluo.com/gzm1997/h8bth4ekxvnh1znn9ey0easp/image.png
   [3]: http://static.zybuluo.com/gzm1997/a1r472cs34jmwoz37ru1f81c/image.png
+  [4]: http://static.zybuluo.com/gzm1997/qigban8e64wcjht38witq7wx/image.png
+  [5]: http://static.zybuluo.com/gzm1997/k08n0sgr2pzis81tza69qwzd/image.png
+  [6]: http://static.zybuluo.com/gzm1997/0egkg9lgotnp5sjbnvii6b9d/image.png
+  [7]: http://static.zybuluo.com/gzm1997/nrj6rmdegf0ejs6l59h2o2yu/image.png
+  [8]: http://static.zybuluo.com/gzm1997/sjbgs77tn525l925095sjfwz/image.png
+  [9]: http://static.zybuluo.com/gzm1997/twv4y89hh7oc787zs7cpnv7u/image.png
+  [10]: http://static.zybuluo.com/gzm1997/ixi9ezzr05t9lmluqmmfp2z2/image.png

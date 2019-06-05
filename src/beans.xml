@@ -2,11 +2,5 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <!--无论你用不用　下面两个bean都会被创建　其实所有的bean都会被创建-->
-    <bean id="mysql" class="cn.gzm.app.dao.impl.UserGetByMysql"/>
-    <bean id="oracle" class="cn.gzm.app.dao.impl.UserGetByOracle"/>
-
-    <bean id="service" class="cn.gzm.app.service.impl.UserDataServiceImpl">
-        <property name="userDao" ref="mysql"/>
-    </bean>
+    <import resource="config.xml"/>
 </beans>
