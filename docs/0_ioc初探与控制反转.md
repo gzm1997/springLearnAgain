@@ -1,4 +1,4 @@
-﻿# spring学习２
+﻿# 控制反转初探
 
 标签： java spring
 
@@ -101,7 +101,7 @@ public class Test {
 
 １．使用无参构造函数来创建
 class的无参构造函数
-```java
+```
     public UserDataServiceImpl() {
         System.out.println("这是UserDataServiceImpl无参构造函数");
     }
@@ -123,7 +123,7 @@ class的无参构造函数
 
 ２．使用有参构造函数来创建
 class的有参构造函数
-```java
+```
     public UserDataServiceImpl(UserDao userDao) {
         System.out.println("这是UserDataServiceImpl有参构造函数");
         this.userDao = userDao;
@@ -172,7 +172,7 @@ public class ServiceDynamicFactory {
 }
 ```
 配置文件
-```java
+```
     <bean id="dynamicFactory" class="cn.gzm.app.service.factory.ServiceDynamicFactory"/>
     <bean id="service" factory-bean="dynamicFactory" factory-method="newInstance">
         <constructor-arg name="userDao" ref="mysql"></constructor-arg>

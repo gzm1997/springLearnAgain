@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!--无论你用不用　下面两个bean都会被创建　其实所有的bean都会被创建-->
@@ -7,13 +9,21 @@
     <bean id="oracle" class="cn.gzm.app.dao.impl.UserGetByOracle"/>
 
     <bean id="service" class="cn.gzm.app.service.impl.UserDataServiceImpl">
-        <property name="userDao" ref="mysql"/>
+        <property name="properties">
+            <props>
+                <prop key="老婆">"lala"</prop>
+            </props>
+        </property>
     </bean>
-    <!--<bean id="service1" class="cn.gzm.app.service.impl.UserDataServiceImpl">-->
-        <!--<constructor-arg name="userDao" ref="mysql"></constructor-arg>-->
-    <!--</bean>-->
+    <bean id="service1" class="cn.gzm.app.service.impl.UserDataServiceImpl">
+        <constructor-arg name="userDao" ref="mysql"></constructor-arg>
+    </bean>
     <!--<bean id="dynamicFactory" class="cn.gzm.app.service.factory.ServiceDynamicFactory"/>-->
     <!--<bean id="service2" factory-bean="dynamicFactory" factory-method="newInstance">-->
         <!--<constructor-arg name="userDao" ref="mysql"></constructor-arg>-->
     <!--</bean>-->
+
+    <!--<bean id="user" class="cn.gzm.app.dao.User" p:name="gzm"></bean>-->
+    <bean id="user1" class="cn.gzm.app.dao.User" c:name="gzm1"></bean>
+
 </beans>
