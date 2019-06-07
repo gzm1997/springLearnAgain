@@ -19,6 +19,9 @@ public class Test {
         logProxy.setTarget(user);
         User proxyUser = (User) logProxy.getProxy();
         proxyUser.walk();
+        proxyUser.say();
+        proxyUser.sleep();
+        System.out.println();
 
         List<String> list = new ArrayList<>();
         logProxy.setTarget(list);
