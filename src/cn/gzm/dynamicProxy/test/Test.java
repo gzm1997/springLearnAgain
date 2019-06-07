@@ -25,6 +25,8 @@ public class Test {
 
         List<String> list = new ArrayList<>();
         logProxy.setTarget(list);
+        /*
+        * 从这里可以发现　在动态代理的情况下，代理类都是可以被被代理类的引用指向的*/
         List<String> listProxy = (List<String>) logProxy.getProxy();
         listProxy.add("lala");
     }
