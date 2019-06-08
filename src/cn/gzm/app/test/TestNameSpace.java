@@ -11,7 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class TestNameSpace {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("beans.xml");
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("xml/iocXml/beans.xml");
         User user = (User) applicationContext.getBean(User.class);
         System.out.println(user.getName());
     }
