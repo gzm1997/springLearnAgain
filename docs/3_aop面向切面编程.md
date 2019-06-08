@@ -101,7 +101,9 @@ public class UserImpl implements User {
     </aop:config>
 ```
 配置文件这里简直折腾死我了，这也是我不推荐这个实现aop接口的方法，需要在配置文件头引入如下部分：
+
 ![image.png-130.2kB][2]
+
 除此之外，除了需要常规的spring jar包还需要自己额外倒入**aspectjweaver.jar**，否则报错。在idea上实现的方式是在project structure -> Modules -> Dependencies -> + jar包
 
 最后使用idea以来存储方式是在iml配置文件上形成如下：
@@ -117,10 +119,104 @@ public class UserImpl implements User {
     </orderEntry>
 
  最终运行效果：
+ 
  ![image.png-32.3kB][3]
+ 
  可以看见，因为实现的日志类是在每个方法之前打印这个目标类的哪个方法被调用，所以运行效果是符合预期的。
- 
- 
+
+
+----------
+## 自定义类实现aop ##
+目标类：
+```java
+public class UserImpl implements User {
+    @Override
+    public void walk() {
+        System.out.println("正在走路");
+    }
+
+    @Override
+    public void say() {
+        System.out.println("正在说话");
+    }
+
+    @Override
+    public void sleep() {
+        System.out.println("正在睡觉");
+    }
+}
+```
+日志类：
+```java
+public class Log {
+    public void before() {
+        System.out.println("方法执行前");
+    }
+}
+```
+可以看到这里日志类跟切面相关的工作什么都不用做，也不需要想上面一样实现某个接口。织入的工作全部都是在配置文件中完成的。
+
+配置文件：
+
+    <bean id="user" class="cn.gzm.aop.aopByClass.dao.impl.UserImpl"/>
+    <bean id="log" class="cn.gzm.aop.aopByClass.log.Log"/>
+    <aop:config>
+        <aop:aspect ref="log">
+            <aop:pointcut id="pointcut" expression="execution(* cn.gzm.aop.aopByClass.dao.impl.*.*(..))"/>
+            <aop:before method="before" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+
+关于aop的配置文件真是老母猪带胸罩一套又一套，记住就没必要了，其实在需要用的时候查看曾经写的demo或者万文档就可以了，不必要记住，也记不住。
+
+运行效果：
+
+![image.png-36.2kB][4]
+
+
+----------
+## 使用注释实现aop ##
+这是我认为是最方便快捷的一种实现aop面向切面编程的一种方式。
+目标类：
+```java
+public class UserImpl implements User {
+    @Override
+    public void walk() {
+        System.out.println("正在走路");
+    }
+
+    @Override
+    public void say() {
+        System.out.println("正在说话");
+    }
+
+    @Override
+    public void sleep() {
+        System.out.println("正在睡觉");
+    }
+}
+```
+日志类：
+```java
+@Aspect
+public class Log {
+    @Before("execution(* cn.gzm.aop.aopByComment.dao.impl.*.*(..))")
+    public void before() {
+        System.out.println("方法执行前");
+    }
+}
+```
+配置文件：
+
+    <bean id="user" class="cn.gzm.aop.aopByComment.dao.impl.UserImpl"/>
+    <bean id="log" class="cn.gzm.aop.aopByComment.log.Log"/>
+    <aop:aspectj-autoproxy/>
+
+运行效果：
+
+![image.png-22.3kB][5]
+
+
  
  
 
@@ -128,3 +224,5 @@ public class UserImpl implements User {
   [1]: http://static.zybuluo.com/gzm1997/s5nkj4thzmji34nhmn5u0v07/image.png
   [2]: http://static.zybuluo.com/gzm1997/q75shr6wvg92y3wwhwjtywjn/image.png
   [3]: http://static.zybuluo.com/gzm1997/gx1kgrmj014hk7t8k3dju9q3/image.png
+  [4]: http://static.zybuluo.com/gzm1997/3jyssxzds6jsftk6540wq4is/image.png
+  [5]: http://static.zybuluo.com/gzm1997/cqtud042e7pxchixgii21at8/image.png
